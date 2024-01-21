@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.token import default_token_generator
+from django.contrib.auth.tokens import default_token_generator
 from djoser import utils
 from templated_mail.mail import BaseEmailMessage
 
@@ -24,7 +24,7 @@ class ActivationEmail(EmailManager):
         context = super().get_context_data()
         user = context.get("user")
         context["name"] = user.name
-        context["uid"] = utils.encode_uid(user.ok)
+        context["uid"] = utils.encode_uid(user.pk)
         context["token"] = default_token_generator.make_token(user)
         context["url"] = settings.DJOSER["ACTIVATION_URL"].format(**context)
         context["domain"] = settings.SITE_DOMAIN
@@ -50,7 +50,7 @@ class ForgotPasswordEmail(BaseEmailMessage):
         context = super().get_context_data()
         user = context.get("user")
         context["name"] = user.name
-        context["uid"] = utils.encode_uid(user.ok)
+        context["uid"] = utils.encode_uid(user.pk)
         context["token"] = default_token_generator.make_token(user)
         context["url"] = settings.DJOSER["PASSWORD_RESET_CONFIRM_URL"].format(**context)
         context["domain"] = settings.SITE_DOMAIN
